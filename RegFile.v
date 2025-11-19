@@ -39,18 +39,19 @@ module RegFile (
   reg [`REG_SIZE:0] registers[0:NumRegs-1];
   
   always@(*) begin
-    rs1_data = (rs1 >= 5'd0 ) ? registers[rs1] : 32'd0;
-    rs2_data = (rs2 >= 5'd0 ) ? registers[rs2] : 32'd0;
-    if (we && (rd != 5'h0)) begin
-        registers[rd] <= rd_data;
-    end 
+    rs1_data <= (rs1 >= 5'd0 ) ? registers[rs1] : 32'd0;
+    rs2_data <= (rs2 >= 5'd0 ) ? registers[rs2] : 32'd0;
   end
   
-  always@(posedge rst) begin
+  always@(posedge rst or posedge clk) begin
     if (rst) begin
         for (i = 0; i < NumRegs; i = i + 1) begin
-            registers[i] = 0;
+            registers[i] <= 0;
         end    
-    end 
+    end else begin
+        if (we && (rd != 5'h0)) begin
+            registers[rd] <= rd_data;
+        end
+    end
 end
 endmodule
