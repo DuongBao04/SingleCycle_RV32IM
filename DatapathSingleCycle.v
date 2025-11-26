@@ -43,15 +43,12 @@ module DatapathSingleCycle (
   wire [20:0] imm_j;
   assign {imm_j[20], imm_j[10:1], imm_j[11], imm_j[19:12], imm_j[0]} = {inst_from_imem[31:12], 1'b0};
   
-  // U - LUI / AUIPC
-  wire [19:0] imm_u;
-  assign imm_u = inst_from_imem[31:12];
   
   wire [`REG_SIZE:0] imm_i_sext = {{20{imm_i[11]}}, imm_i[11:0]};
   wire [`REG_SIZE:0] imm_s_sext = {{20{imm_s[11]}}, imm_s[11:0]};
   wire [`REG_SIZE:0] imm_b_sext = {{19{imm_b[12]}}, imm_b[12:0]};
   wire [`REG_SIZE:0] imm_j_sext = {{11{imm_j[20]}}, imm_j[20:0]};   
-  wire [`REG_SIZE:0] imm_u_sext = {imm_u, 12'b0};
+  wire [`REG_SIZE:0] imm_u_sext = {inst_from_imem[31:12], 12'b0};
 
   // opcodes - see section 19 of RiscV spec
   localparam [`OPCODE_SIZE:0] OpLoad    = 7'b00_000_11;
@@ -157,7 +154,7 @@ module DatapathSingleCycle (
   reg [`REG_SIZE:0] ALUOp1, ALUOp2;
   reg [`REG_SIZE:0] rd_data;
   reg MemToReg, MemWrite, RegWrite;
-  reg [4:0] ALUCtrl;
+  reg [5:0] ALUCtrl;
     
   // RegFile
   RegFile rf (

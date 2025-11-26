@@ -24,5 +24,5 @@
 `define ALU_DIVU            5'b01101
 `define ALU_REM             5'b01110
 `define ALU_REMU            5'b01111
-`define ALU_SLT             5'b01111
-`define ALU_SLTU            5'b01111
+`define ALU_SLT             5'b10000
+`define ALU_SLTU            5'b10001

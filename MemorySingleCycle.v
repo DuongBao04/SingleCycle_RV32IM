@@ -31,7 +31,7 @@ module MemorySingleCycle #(
   input      [`REG_SIZE:0] pc_to_imem,          // must always be aligned to a 4B boundary
   output reg [`REG_SIZE:0] inst_from_imem,      // the value at memory location pc_to_imem
   input      [`REG_SIZE:0] addr_to_dmem,        // must always be aligned to a 4B boundary
-  output reg [`REG_SIZE:0] load_data_from_dmem, // the value at memory location addr_to_dmem
+  output    [`REG_SIZE:0] load_data_from_dmem, // the value at memory location addr_to_dmem
   input      [`REG_SIZE:0] store_data_to_dmem,  // the value to be written to addr_to_dmem, controlled by store_we_to_dmem
   // Each bit determines whether to write the corresponding byte of store_data_to_dmem to memory location addr_to_dmem.
   // E.g., 4'b1111 will write 4 bytes. 4'b0001 will write only the least-significant byte.
@@ -55,6 +55,8 @@ module MemorySingleCycle #(
     inst_from_imem <= mem_array[{pc_to_imem[AddrMsb:AddrLsb]}];
   end
 
+  assign load_data_from_dmem = dmem_array[{addr_to_dmem[AddrMsb:AddrLsb]}];
+
   always @(negedge clock_mem) begin
    if (rst) begin
      for (i = 0; i < NUM_WORDS; i = i + 1) begin
@@ -75,7 +77,7 @@ module MemorySingleCycle #(
      dmem_array[addr_to_dmem[AddrMsb:AddrLsb]][31:24] <= store_data_to_dmem[31:24];
    end
    // dmem is "read-first": read returns value before the write
-   load_data_from_dmem <= dmem_array[{addr_to_dmem[AddrMsb:AddrLsb]}];
+  
   end
 endmodule
 

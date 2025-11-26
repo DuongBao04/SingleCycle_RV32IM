@@ -31,8 +31,7 @@ module RegFile (
     input                    we,
     input                    rst
 );
-  localparam NumRegs = 32;
-  wire [`REG_SIZE:0] regs[0:NumRegs-1];
+  localparam NumRegs = 32;  
   
   // TODO: your code here
   integer i;
